@@ -135,14 +135,14 @@
                     <!--</dependency>-->
                 <!--</dependencies>-->
             <!--</plugin>-->
-            <!--<plugin>-->
-                <!--<artifactId>maven-surefire-plugin</artifactId>-->
-                <!--&lt;!&ndash;Note your version numbe might be different&ndash;&gt;-->
-                <!--<version>2.22.0</version>-->
-                <!--<configuration>-->
-                    <!--<useSystemClassLoader>false</useSystemClassLoader>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!--Note your version numbe might be different-->
+                <version>2.22.0</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
