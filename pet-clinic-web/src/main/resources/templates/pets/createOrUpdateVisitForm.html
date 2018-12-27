@@ -31,13 +31,13 @@
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" name="petId" th:value="${pet.id}" />
-            <button class="btn btn-default" type="submit">Add Visit</button>
+            <button th:with="textVisits=${visit['new']} ? 'Add Visit' : 'Update Visit'" th:text="${textVisits}" class="btn btn-default" type="submit">Add Visit</button>
         </div>
     </div>
 </form>
 
 <br />
-<b>Previous Visits</b>
+<b th:with="text=${visit['new']} ? 'Previous Visits' : 'Other Visits'" th:text="${text}">Visits</b>
 <table class="table table-striped">
     <tr>
         <th>Date</th>

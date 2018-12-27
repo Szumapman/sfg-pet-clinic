@@ -2,6 +2,7 @@ package guru.springframework.sfgpetclinic.controllers;
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
+import guru.springframework.sfgpetclinic.model.Visit;
 import guru.springframework.sfgpetclinic.services.PetService;
 import guru.springframework.sfgpetclinic.services.VisitService;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,7 +48,7 @@ class VisitControllerTest {
 
     private MockMvc mockMvc;
 
-    private final UriTemplate visitsUriTemplate = new UriTemplate("/owners/{ownerId}/pets/{petId}/visits/new");
+    private final UriTemplate visitsUriTemplate = new UriTemplate("/owners/{ownerId}/pets/{petId}/visits");
     private final Map<String, String> uriVariables = new HashMap<>();
     private URI visitsUri;
 
@@ -81,19 +84,38 @@ class VisitControllerTest {
 
     @Test
     void initNewVisitForm() throws Exception {
-        mockMvc.perform(get(visitsUri))
+        mockMvc.perform(get(visitsUri + "/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(PETS_CREATE_OR_UPDATE_VISIT_FORM));
     }
 
     @Test
     void processNewVisitForm() throws Exception {
-        mockMvc.perform(post(visitsUri)
+        mockMvc.perform(post(visitsUri +"/new")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("date", "2018-11-13")
                     .param("description", YET_ANOTHER_VISIT_DESCRIPTION))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_OWNERS_1))
                 .andExpect(model().attributeExists("visit"));
+    }
+
+
+    @Test
+    void initUpdateVisitForm() throws Exception {
+        when(visitService.findById(anyLong())).thenReturn(Visit.builder().id(1L).build());
+        mockMvc.perform(get(visitsUri + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("pet"))
+                .andExpect(model().attributeExists("visit"))
+                .andExpect(view().name(PETS_CREATE_OR_UPDATE_VISIT_FORM));
+    }
+
+    @Test
+    void processUpdateVisitForm()throws Exception {
+        mockMvc.perform(post(visitsUri + "/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name(REDIRECT_OWNERS_1));
+        verify(petService).save(any());
     }
 }
