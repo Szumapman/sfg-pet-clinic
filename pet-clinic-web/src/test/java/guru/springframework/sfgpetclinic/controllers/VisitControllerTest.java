@@ -45,7 +45,7 @@ class VisitControllerTest {
 
     private MockMvc mockMvc;
 
-    private final UriTemplate visitsUriTemplate = new UriTemplate("/owners/{ownerId}/pets/{petId}/visits/new");
+    private final UriTemplate visitsUriTemplate = new UriTemplate("/owners/{ownerId}/pets/{petId}/visits");
     private final Map<String, String> uriVariables = new HashMap<>();
     private URI visitsUri;
 
@@ -81,14 +81,14 @@ class VisitControllerTest {
 
     @Test
     void initNewVisitForm() throws Exception {
-        mockMvc.perform(get(visitsUri))
+        mockMvc.perform(get(visitsUri + "/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name(PETS_CREATE_OR_UPDATE_VISIT_FORM));
     }
 
     @Test
     void processNewVisitForm() throws Exception {
-        mockMvc.perform(post(visitsUri)
+        mockMvc.perform(post(visitsUri +"/new")
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .param("date", "2018-11-13")
                     .param("description", YET_ANOTHER_VISIT_DESCRIPTION))
